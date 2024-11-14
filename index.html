@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css" />
+        <title>Current Weather</title>
+    </head>
+    <body>
+        <header>
+            <h1>Current Weather</h1>
+        </header>
+        <main>
+            <form aria-label="Select city to watch current weather" class="selectForm">
+                <label for="location">Select a city:</label>
+                <select  id="location" name="location">
+                    <option value="">please selec a city</option>
+                    <option value="Winnipeg">Winnipeg</option>
+                    <option value="Toronto">Toronto</option>
+                    <option value="Montreal">Montreal</option>
+                    <option value="Vancouver">Vancouver</option>
+                    <option value="New York">New York</option>
+                    <option value="Chengdu">Chengdu</option>
+                </select>
+                <button type="button" id="loadButton">View Weather</button>
+            </form>
+            <button id="new-city" class="hidden">New City</button>
+            <section id="weatherDataContainer"></section>
+            <table id="search-history-table">
+                <thead>
+                    <tr>
+                        <th>City</th>
+                        <th>Temperature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- search history will be inserted here -->
+                </tbody>
+            </table>
+        </main>
+        <script src="script.js" type="module"></script>   
+    </body>
+</html>
