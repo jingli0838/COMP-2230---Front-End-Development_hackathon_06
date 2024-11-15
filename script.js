@@ -14,9 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const tbodyNode = document.querySelector("#search-history-table tbody");
     const newCitybutton = document.getElementById("new-city");
 
-    // Initialize the game
-    fetchData();
+    // Load stored temperatures on page load
     displayTemperature();
+    checkSelectedCity();
     
 
     async  function fetchData(location){
@@ -73,33 +73,17 @@ document.addEventListener("DOMContentLoaded", function () {
         containerNode.appendChild(headNode);
         // display the weather data 
         const weatherDataNode = document.createElement('p');
-        weatherDataNode.innerHTML = `Country:${weatherData[6]}<br>Ctiy:${weatherData[5]}<br>Tempreture:${weatherData[1]}<br>Humidity:${weatherData[0]}<br>Wind Degree:${weatherData[2]}<br>Wind Direction:${weatherData[3]} <br>Wind Speed:${weatherData[4]}<br>`;
+        weatherDataNode.innerHTML = `Country:${weatherData[6]}<br>Ctiy:${weatherData[5]}<br>Temperature:${weatherData[1]}<br>Humidity:${weatherData[0]}<br>Wind Degree:${weatherData[2]}<br>Wind Direction:${weatherData[3]} <br>Wind Speed:${weatherData[4]}<br>`;
         containerNode.appendChild(weatherDataNode); 
+
+
+        // Save temperature to localStorage
+        const temperature = getTemperature();
+        const cityname = weatherData[5];
+        if (temperature) saveTemperature(cityname, temperature);
+        displayTemperature();
     } 
 
-    form.addEventListener("submit", handleFormSubmit);
-    newPlayerButton.addEventListener("click", newPlayer);
-
-
-    function handleFormSubmit(event) {
-        event.preventDefault();
-        //... form submission logic including setting cookies and calculating score
-        const selectedCity = selectNode.querySelector(`input[name="location"]:checked`).value;
-     
-        checkSelectedCity();
-        const cityname = getCookie("cityname");
-        if(!cityname){
-            //Calls setCookie if no username cookie is found
-            setCookie("cityname",selectedCity,1);
-        };
-        //Calculates the current score with calculateScore
-        const temperature = getTemperature();
-        //Saves the temperature with saveScore.
-        saveTempreture(nameValue, temperature);
-        displayTemperature();
-        // Checks for the username cookie again with checkUsername to adjust the UI accordingly.
-        checkSelectedCity();
-    }
 
     function checkSelectedCity() {
         //... code for checking if a username cookie is set and adjusting the UI 
@@ -138,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function saveTempreture(cityname, temperature) {
+    function saveTemperature(cityname, temperature) {
         // Retrieve the existing scores for the username, or initialize a new array if none exist
         const existingtemperatures = JSON.parse(localStorage.getItem(cityname)||"[]");
         // Add the new score to the array
@@ -148,13 +132,10 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem(cityname, JSON.stringify(existingtemperatures));
     }
 
-    function newPlayer() {
-        //... code for clearing the username cookie and updating the UI
-        // clear cookie
+    newCitybutton.addEventListener("click", () => {
         setCookie("cityname", "", -1);
-        checkUsername();  
-        console.log("New city initialized. cityname cookie cleared.");
-    }
+        checkSelectedCity();
+    });
 
     function getTemperature() {
         //... code for calculating the score
