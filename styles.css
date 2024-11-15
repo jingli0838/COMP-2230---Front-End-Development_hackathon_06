@@ -1,3 +1,20 @@
 .hidden {
     display: none;
 }
+
+
+
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+
+#weatherDataContainer{
+    padding: 0.9375rem;
+    margin-bottom: 0.625rem;
+    border: 1px solid #ddd;
+    border-radius: 0.3125rem;
+    background-color: #fafafa;
+}
