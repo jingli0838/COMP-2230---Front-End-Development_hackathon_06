@@ -78,10 +78,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         // Save temperature to localStorage
+        
         const temperature = getTemperature();
         const cityname = weatherData[5];
+        setCookie("cityname",cityname,1);
         if (temperature) saveTemperature(cityname, temperature);
         displayTemperature();
+        
     } 
 
 
