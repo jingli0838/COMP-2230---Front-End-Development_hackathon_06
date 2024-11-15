@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize the game
     fetchData();
-    displayScores();
+    displayTemperature();
     
 
     async  function fetchData(location){
@@ -93,14 +93,12 @@ document.addEventListener("DOMContentLoaded", function () {
             setCookie("cityname",selectedCity,1);
         };
         //Calculates the current score with calculateScore
-        const score = calculateScore();
-        //Saves the score with saveScore.
-        saveScore(nameValue, score);
-        displayScores();
+        const temperature = getTemperature();
+        //Saves the temperature with saveScore.
+        saveTempreture(nameValue, temperature);
+        displayTemperature();
         // Checks for the username cookie again with checkUsername to adjust the UI accordingly.
-        checkUsername();
-        // Fetches new questions by calling fetchQuestions for another round.
-        fetchQuestions();
+        checkSelectedCity();
     }
 
     function checkSelectedCity() {
@@ -140,58 +138,62 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function saveScore(username, score) {
+    function saveTempreture(cityname, temperature) {
         // Retrieve the existing scores for the username, or initialize a new array if none exist
-        const existingScores = JSON.parse(localStorage.getItem(username)||"[]");
+        const existingtemperatures = JSON.parse(localStorage.getItem(cityname)||"[]");
         // Add the new score to the array
-        existingScores.push(score);
+        existingtemperatures.push(temperature);
 
         // Save the updated array back to localStorage
-        localStorage.setItem(username, JSON.stringify(existingScores));
+        localStorage.setItem(cityname, JSON.stringify(existingtemperatures));
     }
 
     function newPlayer() {
         //... code for clearing the username cookie and updating the UI
         // clear cookie
-        setCookie("username", "", -1);
+        setCookie("cityname", "", -1);
         checkUsername();  
         console.log("New city initialized. cityname cookie cleared.");
     }
 
-    function calculateScore() {
+    function getTemperature() {
         //... code for calculating the score
-        let score =0;
-        document.querySelectorAll("[id^='question-']").forEach((questionDiv,index)=>{
-            const selectedAnswer = questionDiv.querySelector(`input[name="answer${index}"]:checked`);
-            
-            if(selectedAnswer){
-                const isFlag = selectedAnswer.hasAttribute("data-correct");
-                if(isFlag){
-                    score ++;
-                }
-            }
-        })
-        return score;
-    }
+        const weatherDataNode = containerNode.querySelector('p'); // Assuming it's the first <p> element in the container
 
-    function displayScores() {
+        // Split the inner HTML by line breaks and extract the temperature line
+        const lines = weatherDataNode.innerHTML.split('<br>');
+        const temperatureLine = lines.find(line => line.includes('Temperature'));
+
+        if (temperatureLine) {
+            // Extract the numerical value from the "Temperature: <value>" format
+            const temperature = temperatureLine.split(':')[1].trim();
+            console.log("Retrieved temperature:", temperature);
+            return temperature;
+        } else {
+            console.log("Temperature data not found.");
+            return null;
+        }
+}
+
+
+    function displayTemperature() {
         //... code for displaying scores from localStorage
         // clear the tbodyNode
         tbodyNode.innerHTML = "";
         // display all the scores in the localstorage
         for(let i=0; i< localStorage.length; i++){
-            const username = localStorage.key(i);
-            const scores = JSON.parse(localStorage.getItem(username)||"[]");
+            const cityname = localStorage.key(i);
+            const temperatures = JSON.parse(localStorage.getItem(cityname)||"[]");
             
-            scores.forEach(score =>{
+            temperatures.forEach(temperature =>{
                 const newRow = document.createElement("tr");
-                const usernameCell = document.createElement("td");
-                usernameCell.textContent = username;
-                const scoreCell = document.createElement("td");
-                scoreCell.textContent = score;
+                const citynameCell = document.createElement("td");
+                citynameCell.textContent = cityname;
+                const temperatureCell = document.createElement("td");
+                temperatureCell.textContent = temperature;
                 // Append the cells to the row
-                newRow.appendChild(usernameCell);
-                newRow.appendChild(scoreCell);
+                newRow.appendChild(citynameCell);
+                newRow.appendChild(temperatureCell);
                 // Append the row to the table body
                 tbodyNode.appendChild(newRow);
             }) 
